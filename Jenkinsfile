@@ -101,10 +101,11 @@ pipeline {
             environment {
                 AGAVE_USERNAME    = 'sd2eadm'
                 AGAVE_PASSWORD    = credentials('sd2eadm-password')
+                AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${AGAVE_USERNAME}"
             }
             steps {
                 script {
-                    sh "get-job-client ${clientPrefix}-deploy ${BUILD_ID}"
+                    sh "get-job-client ${clientPrefix}-admin ${BUILD_ID}"
                     sh(script: "abaco workers -n ${ACTOR_WORKERS} ${deployedActorId}", returnStdout: false)
 
                 }
@@ -113,7 +114,12 @@ pipeline {
     }
     post {
         always {
-            sh "release-job-client ${clientName} ${BUILD_ID}"
+            withEnv(["AGAVE_CACHE_DIR=${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}"]) {
+                sh "release-job-client ${clientName} ${BUILD_ID}"
+            }
+            withEnv(["AGAVE_CACHE_DIR=${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${AGAVE_USERNAME}"]) {
+                sh "release-job-client ${clientPrefix}-admin ${BUILD_ID}"
+            }
             deleteDir()
         }
         success {
