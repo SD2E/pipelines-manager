@@ -60,8 +60,8 @@ function random_hex() {
   else
     length_hex=$1
   fi
-  cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w $length_hex | head -n 1
-
+  hexx=$(cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w $length_hex | head -n 1)
+  echo -n $hexx
 }
 
 function read_reactor_rc() {
