@@ -33,7 +33,7 @@ pipeline {
         stage('Build project') {
             steps {
                 println("Building against branch ${BRANCH_NAME}")
-                clientName = sh(script: 'echo -n "${clientPrefix}-${BRANCH_NAME}", returnStdout: true).trim()
+                clientName = sh(script: 'echo -n "${clientPrefix}-${BRANCH_NAME}"', returnStdout: true).trim()
                 sh "get-job-client ${clientName} ${BUILD_ID}"
                 // sh "cat ${CONFIG_LOCAL_FILE} > config-local.yml"
                 sh "make clean || true"
