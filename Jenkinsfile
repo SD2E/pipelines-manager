@@ -14,7 +14,7 @@ pipeline {
         ACTOR_WORKERS = 1
         PYTEST_OPTS       = '-s -vvv'
         ABACO_DEPLOY_OPTS = ''
-        AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}"
+        AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${BUILD_ID}"
         AGAVE_JSON_PARSER = "jq"
         AGAVE_TENANTID    = "sd2e"
         AGAVE_APISERVER   = "https://api.sd2e.org"
@@ -60,7 +60,7 @@ pipeline {
             environment {
                 AGAVE_USERNAME    = 'sd2eadm'
                 AGAVE_PASSWORD    = credentials('sd2eadm-password')
-                AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${AGAVE_USERNAME}"
+                AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${BUILD_ID}-${AGAVE_USERNAME}"
             }
             steps {
                 script {
@@ -82,7 +82,7 @@ pipeline {
             environment {
                 AGAVE_USERNAME    = 'sd2eadm'
                 AGAVE_PASSWORD    = credentials('sd2eadm-password')
-                AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${AGAVE_USERNAME}"
+                AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${BUILD_ID}-${AGAVE_USERNAME}"
             }
             steps {
                 script {
@@ -102,11 +102,10 @@ pipeline {
             environment {
                 AGAVE_USERNAME    = 'sd2eadm'
                 AGAVE_PASSWORD    = credentials('sd2eadm-password')
-                AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${AGAVE_USERNAME}"
+                AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${BUILD_ID}-${AGAVE_USERNAME}"
             }
             steps {
                 script {
-                    sh "get-job-client ${clientName}-admin ${BUILD_ID}"
                     sh(script: "abaco workers -n ${ACTOR_WORKERS} ${deployedActorId}", returnStdout: false)
 
                 }
@@ -115,10 +114,10 @@ pipeline {
     }
     post {
         always {
-            withEnv(["AGAVE_CACHE_DIR=${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}"]) {
+            withEnv(["AGAVE_CACHE_DIR=${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${BUILD_ID}"]) {
                 sh "release-job-client ${clientName} ${BUILD_ID}"
             }
-            withEnv(["AGAVE_CACHE_DIR=${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${AGAVE_USERNAME}"]) {
+            withEnv(["AGAVE_CACHE_DIR=${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${BUILD_ID}-${AGAVE_USERNAME}"]) {
                 sh "release-job-client ${clientName}-admin ${BUILD_ID}"
             }
             deleteDir()
