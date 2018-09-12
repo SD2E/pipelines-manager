@@ -30,17 +30,24 @@ tests-pytest:
 	bash $(SCRIPT_DIR)/run_container_process.sh $(PYTHON) -m "pytest" $(PYTEST_DIR) $(PYTEST_OPTS)
 
 tests-integration: tests-local
+pipelines: tests-local-create-tasbe tests-local-create-platereader
 
 tests-local: tests-local-create tests-local-delete
 
-tests-local-create: tests-local-create-tasbe
-tests-local-delete: tests-local-delete-tasbe
+tests-local-create: tests-local-create-tacobot
+tests-local-delete: tests-local-delete-tacobot
+
+tests-local-create-tacobot:
+	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/0-local-create-tacobot.json
+
+tests-local-delete-tacobot:
+	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/0-local-delete-tacobot.json
 
 tests-local-create-tasbe:
 	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/1-local-create-tasbe.json
 
-tests-local-delete-tasbe:
-	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/1-local-delete-tasbe.json
+tests-local-create-platereader:
+	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/2-local-create-platereader.json
 
 tests-local-run:
 	echo "not implemented"
