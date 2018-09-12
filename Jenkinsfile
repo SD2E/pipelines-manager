@@ -48,6 +48,7 @@ pipeline {
                 not { branch 'master' }
             }
             steps {
+                sh "get-job-client ${clientName} ${BUILD_ID}"
                 sh "cat ${SECRETS_FILE_STAGING} > secrets.json"
                 sh "NOCLEANUP=1 make tests-integration"
             }
