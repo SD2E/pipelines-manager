@@ -14,7 +14,7 @@ pipeline {
         ACTOR_WORKERS = 1
         PYTEST_OPTS       = '-s -vvv'
         ABACO_DEPLOY_OPTS = ''
-        AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${JOB_BASE_NAME}"
+        AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}"
         AGAVE_JSON_PARSER = "jq"
         AGAVE_TENANTID    = "sd2e"
         AGAVE_APISERVER   = "https://api.sd2e.org"
@@ -59,6 +59,7 @@ pipeline {
             environment {
                 AGAVE_USERNAME    = 'sd2eadm'
                 AGAVE_PASSWORD    = credentials('sd2eadm-password')
+                AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${AGAVE_USERNAME}"
             }
             steps {
                 script {
@@ -80,6 +81,7 @@ pipeline {
             environment {
                 AGAVE_USERNAME    = 'sd2eadm'
                 AGAVE_PASSWORD    = credentials('sd2eadm-password')
+                AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${AGAVE_USERNAME}"
             }
             steps {
                 script {
