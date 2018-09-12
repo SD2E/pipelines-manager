@@ -8,7 +8,7 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-        CLIENT_PREFIX     = "pipelines-manager"
+        CLIENT_PREFIX     = "pipelines-manager-reactor"
         ACTOR_ID_PROD     = 'kOYmxWRq5X4K7'
         ACTOR_ID_STAGING  = 'G1p783PxpalBB'
         ACTOR_WORKERS = 1
@@ -71,7 +71,6 @@ pipeline {
                     // TODO - update alias
                     println("Deployed ${reactorName}:staging with actorId ${ACTOR_ID_STAGING}")
                     slackSend ":tacc: Deployed *${reactorName}:staging* from ${BRANCH_NAME} with actorId *${ACTOR_ID_STAGING}*"
-                    sh "release-job-client ${clientName}-admin ${BUILD_ID}"
                 }
             }
         }
@@ -94,7 +93,6 @@ pipeline {
                     // TODO - update alias
                     println("Deployed ${reactorName}:production with actorId ${ACTOR_ID_PROD}")
                     slackSend ":tacc: Deployed *${reactorName}:prod* from ${BRANCH_NAME} with actorId *${ACTOR_ID_PROD}*"
-                    sh "release-job-client ${clientName}-admin ${BUILD_ID}"
                 }
             }
         }
