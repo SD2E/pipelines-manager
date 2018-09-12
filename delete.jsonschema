@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "PipelinesDefinitionUpdate",
+  "description": "Manage a Pipeline record",
+  "type": "object",
+  "properties": {
+    "uuid": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string"
+      "enum": ["delete"]
+    },
+    "__options": {
+      "description": "private key for passing runtime options to a pipeline"
+    }
+  },
+  "required": ["uuid", "action"],
+  "additionalProperties": false
+}

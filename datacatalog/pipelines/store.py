@@ -92,13 +92,16 @@ class PipelineStore(BaseStore):
             raise PipelineUpdateFailure(
                 'Failed to update pipeline {}'.format(pipeline_uuid), exc)
 
-    def delete_pipeline(self, uuid):
-        '''Delete record by UUID'''
+    def delete(self, uuid, force=False):
+        """Delete a pipeline by UUID
+        By default the record is marked as invisible. If force==True, the
+        actual record is deleted (but this is bad for provenance)."""
         if isinstance(uuid, str):
             uuid = text_uuid_to_binary(uuid)
-        try:
-            return self.coll.remove({'uuid': uuid})
-        except Exception as exc:
-            raise PipelineUpdateFailure(
-                'Failed to delete pipeline {}'.format(uuid), exc)
+        if force:
+            try:
+                return self.coll.remove({'uuid': uuid})
+            except Exception as exc:
+                raise PipelineUpdateFailure(
+                    'Failed to delete pipeline {}'.format(uuid), exc)
 

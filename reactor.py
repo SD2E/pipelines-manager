@@ -3,6 +3,7 @@ import json
 from attrdict import AttrDict
 from pprint import pprint
 from reactors.runtime import Reactor, agaveutils
+from jsonschema import ValidationError
 from datacatalog.pipelines import PipelineStore, PipelineCreateFailure, PipelineUpdateFailure
 from datacatalog.identifiers import datacatalog_uuid
 
@@ -18,10 +19,19 @@ def main():
         except Exception:
             pass
 
+    action = None
     try:
-        r.validate_message(m, permissive=False)
-    except Exception as exc:
-        r.on_failure('Failed to validate message', exc)
+        for action in ['create', 'update', 'delete']:
+            try:
+                r.validate_message(m, messageschema='/schemas/' + action + '.jsonschema', permissive=False)
+                break
+            except Exception as exc:
+                pass
+        if action is None:
+            raise ValidationError('Message did not match any known schema')
+    except Exception as vexc:
+        r.on_failure('Failed to process message', vexc)
+    r.logger.debug('Action selected: {}'.format(action))
 
     if '__options' in m:
         # allow override of settings
@@ -41,16 +51,27 @@ def main():
                                config=r.settings.catalogstore,
                                session=stores_session)
 
-    create_dict = {}
-    for k in pipe_store.CREATE_OPTIONAL_KEYS:
-        if k in m:
-            create_dict[k] = m.get(k)
+    if action == 'create':
+        create_dict = {}
+        for k in pipe_store.CREATE_OPTIONAL_KEYS:
+            if k in m:
+                create_dict[k] = m.get(k)
 
-    try:
-        new_pipeline = pipe_store.create(m.get('components', []), **create_dict)
-        r.logger.info('Successfully created pipeline {}'.format(str(new_pipeline['uuid'])))
-    except Exception as exc:
-        r.on_failure('Create failed', exc)
+        try:
+            new_pipeline = pipe_store.create(m.get('components', []), **create_dict)
+            r.on_success('Successfully created pipeline {}'.format(str(new_pipeline['uuid'])))
+        except Exception as exc:
+            r.on_failure('Create failed', exc)
+
+    # FIXME Implement 'update' here and in datacatalog.pipelines.store
+
+    if action == 'delete':
+        # FIXME Implement soft delete based on _visible key
+        try:
+            pipe_store.delete(uuid=m.get('uuid'), force=True)
+            r.on_success('Successfully deleted pipeline {}'.format(m.get('uuid')))
+        except Exception as exc:
+            r.on_failure('Delete failed', exc)
 
 if __name__ == '__main__':
     main()

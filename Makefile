@@ -31,12 +31,16 @@ tests-pytest:
 
 tests-integration: tests-local
 
-tests-local: tests-local-create
+tests-local: tests-local-create tests-local-delete
 
 tests-local-create: tests-local-create-tasbe
+tests-local-delete: tests-local-delete-tasbe
 
 tests-local-create-tasbe:
-	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/1-local-tasbe.json
+	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/1-local-create-tasbe.json
+
+tests-local-delete-tasbe:
+	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/1-local-delete-tasbe.json
 
 tests-local-run:
 	echo "not implemented"
