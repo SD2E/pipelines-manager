@@ -1,5 +1,6 @@
 // JOB_BASE_NAME is not reliably available in Multibranch Pipeline
 def clientName = "pipelines-manager"
+def deployedActorId = ""
 pipeline {
     agent any
     options {
@@ -7,7 +8,8 @@ pipeline {
     }
     environment {
         ACTOR_ID_PROD     = 'kOYmxWRq5X4K7'
-        ACTOR_ID_STAGING  = 'kOYmxWRq5X4K7'
+        ACTOR_ID_STAGING  = 'G1p783PxpalBB'
+        ACTOR_WORKERS = 1
         PYTEST_OPTS       = '-s -vvv'
         ABACO_DEPLOY_OPTS = ''
         AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${JOB_BASE_NAME}"
@@ -58,8 +60,10 @@ pipeline {
                 script {
                     sh "cat ${SECRETS_FILE_STAGING} > secrets.json"
                     sh "get-job-client ${clientName}-deploy ${BUILD_ID}"
+                    deployedActorId = sh(script: "echo -n ${ACTOR_ID_STAGING}", returnStdout: true).trim()
                     reactorName = sh(script: 'cat reactor.rc | egrep -e "^REACTOR_NAME=" | sed "s/REACTOR_NAME=//"', returnStdout: true).trim()
                     sh(script: "abaco deploy -U ${ACTOR_ID_STAGING}", returnStdout: false)
+                    sh(script: "abaco workers -n ${ACTOR_WORKERS} -U ${ACTOR_ID_STAGING}", returnStdout: false)
                     // TODO - update alias
                     println("Deployed ${reactorName}:staging with actorId ${ACTOR_ID_STAGING}")
                     slackSend ":tacc: Deployed *${reactorName}:staging* with actorId *${ACTOR_ID_STAGING}*"
@@ -78,11 +82,28 @@ pipeline {
                 script {
                     sh "cat ${SECRETS_FILE} > secrets.json"
                     sh "get-job-client ${clientName}-deploy ${BUILD_ID}"
+                    deployedActorId = sh(script: "echo -n ${ACTOR_ID_STAGING}", returnStdout: true).trim()
                     reactorName = sh(script: 'cat reactor.rc | egrep -e "^REACTOR_NAME=" | sed "s/REACTOR_NAME=//"', returnStdout: true).trim()
                     sh(script: "abaco deploy -U ${ACTOR_ID_PROD}", returnStdout: false)
                     // TODO - update alias
                     println("Deployed ${reactorName}:production with actorId ${ACTOR_ID_PROD}")
                     slackSend ":tacc: Deployed *${reactorName}:prod* with actorId *${ACTOR_ID_PROD}*"
+                    sh(script: "abaco workers -n ${ACTOR_WORKERS} -U ${ACTOR_ID_PROD}", returnStdout: false)
+
+                }
+            }
+        }
+        stage('Set initial scaling') {
+            when { anyOf { branch 'master'; branch 'develop' } }
+            environment {
+                AGAVE_USERNAME    = 'sd2eadm'
+                AGAVE_PASSWORD    = credentials('sd2eadm-password')
+            }
+            steps {
+                script {
+                    sh "get-job-client ${clientName}-deploy ${BUILD_ID}"
+                    sh(script: "abaco workers -n ${ACTOR_WORKERS} -U ${deployedActorId}", returnStdout: false)
+
                 }
             }
         }
