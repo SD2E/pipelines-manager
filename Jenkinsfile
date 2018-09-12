@@ -8,7 +8,7 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-        CLIENT_PREFIX     = "pipelines-manager-reactor"
+        CLIENT_PREFIX     = "dc-pipelines-manager"
         ACTOR_ID_PROD     = 'kOYmxWRq5X4K7'
         ACTOR_ID_STAGING  = 'G1p783PxpalBB'
         ACTOR_WORKERS = 1
