@@ -8,6 +8,7 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
+        CLIENT_PREFIX     = "pipelines-manager"
         ACTOR_ID_PROD     = 'kOYmxWRq5X4K7'
         ACTOR_ID_STAGING  = 'G1p783PxpalBB'
         ACTOR_WORKERS = 1
@@ -34,7 +35,7 @@ pipeline {
             steps {
                 println("Building against branch ${BRANCH_NAME}")
             script {
-                    clientName = sh(script: 'echo -n "${clientPrefix}-${BRANCH_NAME}"', returnStdout: true).trim()
+                    clientName = sh(script: 'echo -n "${CLIENT_PREFIX}-${BRANCH_NAME}"', returnStdout: true).trim()
                 }
                 sh "get-job-client ${clientName} ${BUILD_ID}"
                 // sh "cat ${CONFIG_LOCAL_FILE} > config-local.yml"
