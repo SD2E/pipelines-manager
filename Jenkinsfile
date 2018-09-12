@@ -8,7 +8,7 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-        CLIENT_PREFIX     = "dc-pipelines-manager"
+        CLIENT_PREFIX     = "catalog-pipelines-manager"
         ACTOR_ID_PROD     = 'kOYmxWRq5X4K7'
         ACTOR_ID_STAGING  = 'G1p783PxpalBB'
         ACTOR_WORKERS = 1
@@ -105,7 +105,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "get-job-client ${clientPrefix}-admin ${BUILD_ID}"
+                    sh "get-job-client ${clientName}-admin ${BUILD_ID}"
                     sh(script: "abaco workers -n ${ACTOR_WORKERS} ${deployedActorId}", returnStdout: false)
 
                 }
@@ -118,7 +118,7 @@ pipeline {
                 sh "release-job-client ${clientName} ${BUILD_ID}"
             }
             withEnv(["AGAVE_CACHE_DIR=${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${AGAVE_USERNAME}"]) {
-                sh "release-job-client ${clientPrefix}-admin ${BUILD_ID}"
+                sh "release-job-client ${clientName}-admin ${BUILD_ID}"
             }
             deleteDir()
         }
