@@ -1,6 +1,7 @@
 // JOB_BASE_NAME is not reliably available in Multibranch Pipeline
-def clientName = "pipelines-manager"
+def clientPrefix = "pipelines-manager"
 def deployedActorId = ""
+def clientName = ""
 pipeline {
     agent any
     options {
@@ -32,8 +33,8 @@ pipeline {
         stage('Build project') {
             steps {
                 println("Building against branch ${BRANCH_NAME}")
-
-                sh "get-job-client ${clientName}-${BRANCH_NAME} ${BUILD_ID}"
+                clientName = sh(script: 'echo -n "${clientPrefix}-${BRANCH_NAME}'', returnStdout: true).trim()
+                sh "get-job-client ${clientName} ${BUILD_ID}"
                 // sh "cat ${CONFIG_LOCAL_FILE} > config-local.yml"
                 sh "make clean || true"
                 sh "make image"
@@ -59,13 +60,13 @@ pipeline {
             steps {
                 script {
                     sh "cat ${SECRETS_FILE_STAGING} > secrets.json"
-                    sh "get-job-client ${clientName}-deploy ${BUILD_ID}"
+                    sh "get-job-client ${clientName}-admin ${BUILD_ID}"
                     deployedActorId = sh(script: "echo -n ${ACTOR_ID_STAGING}", returnStdout: true).trim()
                     reactorName = sh(script: 'cat reactor.rc | egrep -e "^REACTOR_NAME=" | sed "s/REACTOR_NAME=//"', returnStdout: true).trim()
                     sh(script: "abaco deploy -U ${ACTOR_ID_STAGING}", returnStdout: false)
                     // TODO - update alias
                     println("Deployed ${reactorName}:staging with actorId ${ACTOR_ID_STAGING}")
-                    slackSend ":tacc: Deployed *${reactorName}:staging* with actorId *${ACTOR_ID_STAGING}*"
+                    slackSend ":tacc: Deployed *${reactorName}:staging* from ${BRANCH_NAME} with actorId *${ACTOR_ID_STAGING}*"
                 }
             }
         }
@@ -80,13 +81,13 @@ pipeline {
             steps {
                 script {
                     sh "cat ${SECRETS_FILE} > secrets.json"
-                    sh "get-job-client ${clientName}-deploy ${BUILD_ID}"
+                    sh "get-job-client ${clientName}-admin ${BUILD_ID}"
                     deployedActorId = sh(script: "echo -n ${ACTOR_ID_STAGING}", returnStdout: true).trim()
                     reactorName = sh(script: 'cat reactor.rc | egrep -e "^REACTOR_NAME=" | sed "s/REACTOR_NAME=//"', returnStdout: true).trim()
                     sh(script: "abaco deploy -U ${ACTOR_ID_PROD}", returnStdout: false)
                     // TODO - update alias
                     println("Deployed ${reactorName}:production with actorId ${ACTOR_ID_PROD}")
-                    slackSend ":tacc: Deployed *${reactorName}:prod* with actorId *${ACTOR_ID_PROD}*"
+                    slackSend ":tacc: Deployed *${reactorName}:prod* from ${BRANCH_NAME} with actorId *${ACTOR_ID_PROD}*"
 
                 }
             }
@@ -99,7 +100,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "get-job-client ${clientName}-deploy ${BUILD_ID}"
+                    sh "get-job-client ${clientPrefix}-deploy ${BUILD_ID}"
                     sh(script: "abaco workers -n ${ACTOR_WORKERS} ${deployedActorId}", returnStdout: false)
 
                 }
@@ -108,9 +109,8 @@ pipeline {
     }
     post {
         always {
-            sh "release-job-client ${clientName}-${BRANCH_NAME} ${BUILD_ID}"
-            sh "release-job-client ${clientName}-deploy ${BUILD_ID}"
-            archiveArtifacts artifacts: 'input, output, create_mapped_name_failures.csv', fingerprint: true, excludes: 'secrets.json', allowEmptyArchive: true
+            sh "release-job-client ${clientName} ${BUILD_ID}"
+            sh "release-job-client ${clientName}-admin ${BUILD_ID}"
             deleteDir()
         }
         success {
