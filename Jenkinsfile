@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Run integration tests') {
             when {
-                not { branch 'develop' }
+                not { branch 'master' }
             }
             steps {
                 sh "cat ${SECRETS_FILE_STAGING} > secrets.json"
