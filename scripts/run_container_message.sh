@@ -53,7 +53,7 @@ fi
 TEMP=`mktemp -d $PWD/tmp.XXXXXX` && \
   echo "Working directory: $TEMP"
 
-CNAME=$(random_hex)
+CNAME=${CI_CONTAINER_NAME}
 log "Container name: ${CNAME}"
 
 function finish {

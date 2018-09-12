@@ -5,6 +5,7 @@ UNDER_MACOS=0
 CI_PLATFORM=
 CI_UID=$(id -u ${USER})
 CI_GID=$(id -g ${USER})
+CI_CONTAINER_NAME="test-${RANDOM}-${RANDOM}"
 
 function die(){
     echo "[ERROR] $1"
