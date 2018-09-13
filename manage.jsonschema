@@ -1,20 +1,21 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "PipelinesDefinitionUpdate",
-  "description": "Manage a Pipeline record",
-  "type": "object",
-  "properties": {
-    "uuid": {
-      "type": "string"
-    },
-    "action": {
-      "type": "string"
-      "enum": ["manage"]
-    },
-    "__options": {
-      "description": "private key for passing runtime options to a pipeline"
-    }
-  },
-  "required": ["uuid", "action"],
-  "additionalProperties": false
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "PipelinesDefinitionUpdate",
+	"description": "Manage a Pipeline record",
+	"type": "object",
+	"properties": {
+		"uuid": {
+			"type": "string"
+		},
+		"action": {
+			"type": "string",
+			"enum": ["manage"]
+		},
+		"__options": {
+			"type": "object",
+			"description": "an object used to pass runtime options to a pipeline (private, optional)"
+		}
+	},
+	"required": ["uuid", "action"],
+	"additionalProperties": false
 }

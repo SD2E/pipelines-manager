@@ -30,7 +30,7 @@ tests-pytest:
 	bash $(SCRIPT_DIR)/run_container_process.sh $(PYTHON) -m "pytest" $(PYTEST_DIR) $(PYTEST_OPTS)
 
 tests-integration: tests-local
-pipelines: tests-local-create-tasbe tests-local-create-platereader
+pipelines: tests-local-create-tasbe tests-local-create-platereader tests-local-create-rnaseq
 
 tests-local: tests-local-create tests-local-delete
 
@@ -48,6 +48,10 @@ tests-local-create-tasbe:
 
 tests-local-create-platereader:
 	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/2-local-create-platereader.json
+
+tests-local-create-rnaseq:
+	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/3-local-create-rnaseq.json
+
 
 tests-local-run:
 	echo "not implemented"

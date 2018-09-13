@@ -57,16 +57,19 @@
     "components": {"description": "an unordered array of apps and actors in the pipeline (required)",
                    "type": "array",
                    "items": {"anyOf": [{"$ref": "#/definitions/app"}, {"$ref": "#/definitions/actor"}]}},
-    "collections_level": {
+    "collections_levels": {
       "type": "array",
       "items": {
         "$ref": "#/definitions/collections_level"
       },
       "description": "level(s) of data input that the pipeline acts upon"
     },
-    "processing_level": {
-      "description": "level of data product produced by the pipeline",
-      "$ref": "#/definitions/processing_level"
+    "processing_levels": {
+      "type": "array",
+      "description": "level(s) of data product produced by the pipeline",
+      "items": {
+        "$ref": "#/definitions/processing_level"
+      }
     },
     "accepts": {
       "type": "array",
@@ -83,9 +86,10 @@
       }
     },
     "__options": {
-      "description": "private key for passing runtime options to a pipeline"
+      "description": "private field for passing runtime options to a pipeline",
+      "type": "object"
     }
   },
-  "required": ["components"],
+  "required": ["name", "components"],
   "additionalProperties": false
 }

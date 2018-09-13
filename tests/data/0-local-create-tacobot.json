@@ -11,10 +11,10 @@
             "parameters": {"smoke": true}
         }
     ],
-    "collections_level": [
+    "collections_levels": [
         "measurement"
     ],
-    "processing_level": "1",
+    "processing_levels": ["1"],
     "accepts": [
         "CSV"
     ],

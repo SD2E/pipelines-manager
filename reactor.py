@@ -21,12 +21,15 @@ def main():
 
     action = None
     try:
-        for action in ['create', 'update', 'delete']:
+        for a in ['create', 'update', 'delete']:
             try:
-                r.validate_message(m, messageschema='/schemas/' + action + '.jsonschema', permissive=False)
+                schema_file = '/schemas/' + a + '.jsonschema'
+                r.validate_message(
+                    m, messageschema=schema_file, permissive=False)
+                action = a
                 break
             except Exception as exc:
-                pass
+                r.logger.debug('Validation to "{0}" failed: {1}\n'.format(a, exc))
         if action is None:
             raise ValidationError('Message did not match any known schema')
     except Exception as vexc:
