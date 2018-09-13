@@ -21,8 +21,8 @@
             }
         }
     ],
-    "collections_level": ["measurement"],
-    "processing_level": "1",
+    "collections_levels": ["measurement"],
+    "processing_levels": ["1"],
     "accepts": [
         "CSV",
         "JSON"

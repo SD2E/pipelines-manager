@@ -2,6 +2,7 @@ from uuid import UUID
 import petname
 import os
 import arrow
+import json
 from .. import identifiers
 
 ARCHIVE_PATH_VERSIONS = ['v1']
@@ -45,3 +46,11 @@ def __get_v1_archive_path(pipeline_id, lab_name, experiment_reference, measureme
 
     # NOTE /products/v1/<lab.uuid>/<experiment.uuid>/<measurement.uuid>/<pipeline.uuid/<session|petname>-MMMMDDYYHHmmss
     return '/'.join(path_els)
+
+def params_to_document(params):
+    """Generate a JSON document representing a set of pipeline components"""
+    return json.dumps(params, sort_keys=True, separators=(',', ':'))
+
+def params_document_to_uuid(params_document):
+    """Generate a UUID5 based on a pipeline components document"""
+    return identifiers.datacatalog_uuid.catalog_uuid(params_document)
