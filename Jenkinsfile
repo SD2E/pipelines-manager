@@ -1,14 +1,13 @@
 // JOB_BASE_NAME is not reliably available in Multibranch Pipeline
-def clientPrefix = "pipelines-manager"
+def CLIENT_PREFIX = "pipelines-manager"
 def deployedActorId = ""
-def clientName = ""
 pipeline {
     agent any
     options {
         disableConcurrentBuilds()
     }
     environment {
-        CLIENT_PREFIX     = "catalog-pipelines-manager"
+        CLIENT_PREFIX     = "pipelines-manager"
         ACTOR_ID_PROD     = 'kOYmxWRq5X4K7'
         ACTOR_ID_STAGING  = 'G1p783PxpalBB'
         ACTOR_WORKERS = 1
@@ -34,10 +33,8 @@ pipeline {
         stage('Build project') {
             steps {
                 println("Building against branch ${BRANCH_NAME}")
-            script {
-                    clientName = sh(script: 'echo -n "${CLIENT_PREFIX}-${BRANCH_NAME}"', returnStdout: true).trim()
-                }
-                sh "get-job-client ${clientName}-${BUILD_ID}"
+                sh "get-job-client ${CLIENT_PREFIX}-${BRANCH_NAME} ${BUILD_ID}"
+                sh "cat ${SECRETS_FILE} > secrets.json"
                 // sh "cat ${CONFIG_LOCAL_FILE} > config-local.yml"
                 sh "make clean || true"
                 sh "make image"
@@ -48,9 +45,9 @@ pipeline {
                 not { branch 'master' }
             }
             steps {
-                sh "get-job-client ${clientName}-${BUILD_ID} ${BUILD_ID}"
                 sh "cat ${SECRETS_FILE_STAGING} > secrets.json"
                 sh "NOCLEANUP=1 make tests-integration"
+                sh "FORCE_LOCK_RELEASE=1 release-job-client ${CLIENT_PREFIX}-${BRANCH_NAME} ${BUILD_ID}"
             }
         }
         stage('Deploy to staging from develop') {
@@ -60,12 +57,11 @@ pipeline {
             environment {
                 AGAVE_USERNAME    = 'sd2eadm'
                 AGAVE_PASSWORD    = credentials('sd2eadm-password')
-                AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${BUILD_ID}-${AGAVE_USERNAME}"
             }
             steps {
                 script {
                     sh "cat ${SECRETS_FILE_STAGING} > secrets.json"
-                    sh "get-job-client ${clientName}-admin-${BUILD_ID} ${BUILD_ID}"
+                    sh "get-job-client ${CLIENT_PREFIX}-${BRANCH_NAME}-deploy ${BUILD_ID}"
                     deployedActorId = sh(script: "echo -n ${ACTOR_ID_STAGING}", returnStdout: true).trim()
                     reactorName = sh(script: 'cat reactor.rc | egrep -e "^REACTOR_NAME=" | sed "s/REACTOR_NAME=//"', returnStdout: true).trim()
                     sh(script: "abaco deploy -U ${ACTOR_ID_STAGING}", returnStdout: false)
@@ -82,12 +78,11 @@ pipeline {
             environment {
                 AGAVE_USERNAME    = 'sd2eadm'
                 AGAVE_PASSWORD    = credentials('sd2eadm-password')
-                AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${BUILD_ID}-${AGAVE_USERNAME}"
             }
             steps {
                 script {
                     sh "cat ${SECRETS_FILE} > secrets.json"
-                    sh "get-job-client ${clientName}-admin-${BUILD_ID} ${BUILD_ID}"
+                    sh "get-job-client ${CLIENT_PREFIX}-${BRANCH_NAME}-deploy ${BUILD_ID}"
                     deployedActorId = sh(script: "echo -n ${ACTOR_ID_STAGING}", returnStdout: true).trim()
                     reactorName = sh(script: 'cat reactor.rc | egrep -e "^REACTOR_NAME=" | sed "s/REACTOR_NAME=//"', returnStdout: true).trim()
                     sh(script: "abaco deploy -U ${ACTOR_ID_PROD}", returnStdout: false)
@@ -102,10 +97,10 @@ pipeline {
             environment {
                 AGAVE_USERNAME    = 'sd2eadm'
                 AGAVE_PASSWORD    = credentials('sd2eadm-password')
-                AGAVE_CACHE_DIR   = "${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${BUILD_ID}-${AGAVE_USERNAME}"
             }
             steps {
                 script {
+                    sh "get-job-client ${CLIENT_PREFIX}-${BRANCH_NAME}-deploy ${BUILD_ID}"
                     sh(script: "abaco workers -n ${ACTOR_WORKERS} ${deployedActorId}", returnStdout: false)
 
                 }
@@ -114,12 +109,8 @@ pipeline {
     }
     post {
         always {
-            withEnv(["AGAVE_CACHE_DIR=${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${BUILD_ID}"]) {
-                sh "release-job-client ${clientName}-${BUILD_ID} ${BUILD_ID}"
-            }
-            withEnv(["AGAVE_CACHE_DIR=${HOME}/credentials_cache/${CLIENT_PREFIX}-${BRANCH_NAME}-${BUILD_ID}-${AGAVE_USERNAME}"]) {
-                sh "release-job-client ${clientName}-admin-${BUILD_ID} ${BUILD_ID}"
-            }
+            sh "FORCE_LOCK_RELEASE=1 release-job-client ${CLIENT_PREFIX}-${BRANCH_NAME} ${BUILD_ID}"
+            sh "FORCE_LOCK_RELEASE=1 release-job-client ${CLIENT_PREFIX}-${BRANCH_NAME}-deploy ${BUILD_ID}"
             deleteDir()
         }
         success {
