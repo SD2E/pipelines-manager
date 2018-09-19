@@ -4,6 +4,6 @@ FROM sd2e/reactors:python3
 # added to the container when you run docker build or abaco deploy
 COPY datacatalog /datacatalog
 
-COPY message.jsonschema /schemas/create.jsonschema
+COPY create.jsonschema /schemas/create.jsonschema
 COPY update.jsonschema /schemas/update.jsonschema
 COPY delete.jsonschema /schemas/delete.jsonschema
