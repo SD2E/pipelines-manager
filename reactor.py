@@ -62,7 +62,8 @@ def main():
 
         try:
             new_pipeline = pipe_store.create(m.get('components', []), **create_dict)
-            r.on_success('Successfully created pipeline {}'.format(str(new_pipeline['uuid'])))
+            r.on_success('Created pipeline {} with update token {}'.format(
+                new_pipeline['_uuid'], new_pipeline['token']))
         except Exception as exc:
             r.on_failure('Create failed', exc)
 
@@ -71,7 +72,7 @@ def main():
     if action == 'delete':
         # FIXME Implement soft delete based on _visible key
         try:
-            pipe_store.delete(uuid=m.get('uuid'), force=True)
+            pipe_store.delete(uuid=m.get('uuid'), token=m.get('token'), force=True)
             r.on_success('Successfully deleted pipeline {}'.format(m.get('uuid')))
         except Exception as exc:
             r.on_failure('Delete failed', exc)
