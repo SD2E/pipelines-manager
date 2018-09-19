@@ -1,0 +1,29 @@
+{
+    "name": "Tacobot 9001",
+    "description": "Creates even better breakfast tacos out of silicon, ozone, and shredded GPUs",
+    "components": [
+        {
+            "id": "e1LqaqMyqq4xB",
+            "opts": {"cheese": true, "salsa": true, "eggs": false}
+        },
+        {
+            "id": "bbq-brisket-0.5.0",
+            "parameters": {
+                "smoke": true,
+                "quantity": 4
+            }
+        }
+    ],
+    "collections_levels": [
+        "measurement"
+    ],
+    "processing_levels": [
+        "1"
+    ],
+    "accepts": [
+        "CSV"
+    ],
+    "produces": [
+        "PNG"
+    ]
+}
