@@ -26,6 +26,7 @@ def main():
                 schema_file = '/schemas/' + a + '.jsonschema'
                 r.validate_message(
                     m, messageschema=schema_file, permissive=False)
+                action = a
                 break
             except Exception as exc:
                 r.logger.debug('Validation to "{0}" failed: {1}\n'.format(a, exc))
@@ -34,7 +35,6 @@ def main():
     except Exception as vexc:
         r.on_failure('Failed to process message', vexc)
 
-    action = a
     r.logger.debug('Action selected: {}'.format(action))
 
     if '__options' in m:
