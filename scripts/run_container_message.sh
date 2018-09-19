@@ -59,6 +59,9 @@ log "Container name: ${CNAME}"
 function finish {
   log "Forcing ${CNAME} to stop..."
   docker stop ${CNAME} ; log "(Stopped)"
+  if ((! NOCLEANUP)); then
+    rm -rf ${TEMP}
+  fi
 }
 trap finish EXIT
 
@@ -70,9 +73,5 @@ docker run -t -v ${AGAVE_CREDS}:/root/.agave:rw \
            ${CONTAINER_IMAGE}
 
 DOCKER_EXIT_CODE="$?"
-
-if [ "$DOCKER_EXIT_CODE" == 0 ]; then
-    rm -rf ${TEMP}
-fi
 
 exit ${DOCKER_EXIT_CODE}
