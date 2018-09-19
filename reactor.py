@@ -52,7 +52,7 @@ def main():
 
     # Set up Store objects
     pipe_store = PipelineStore(mongodb=r.settings.mongodb,
-                               config=r.settings.catalogstore,
+                               config=r.settings.get('catalogstore', {}),
                                session=stores_session)
 
     if action == 'create':
