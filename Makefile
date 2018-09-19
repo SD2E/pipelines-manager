@@ -15,7 +15,7 @@ GITREF=$(shell git rev-parse --short HEAD)
 
 all: image
 
-image: datacatalog
+image:
 	abaco deploy -R -t $(GITREF) $(ABACO_DEPLOY_OPTS)
 
 shell:

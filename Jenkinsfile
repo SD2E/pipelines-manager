@@ -8,8 +8,8 @@ pipeline {
     }
     environment {
         CLIENT_PREFIX     = "pipelines-manager"
-        ACTOR_ID_PROD     = 'kOYmxWRq5X4K7'
-        ACTOR_ID_STAGING  = 'G1p783PxpalBB'
+        ACTOR_ID_PROD     = 'G1p783PxpalBB'
+        ACTOR_ID_STAGING  = 'kOYmxWRq5X4K7'
         ACTOR_WORKERS = 1
         PYTEST_OPTS       = '-s -vvv'
         ABACO_DEPLOY_OPTS = ''
