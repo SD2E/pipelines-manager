@@ -51,7 +51,7 @@ def main():
 
     # Set up Store objects
     pipe_store = PipelineStore(mongodb=r.settings.mongodb,
-                               config=r.settings.catalogstore,
+                               config=r.settings.get('catalogstore', {}),
                                session=stores_session)
 
     if action == 'create':
@@ -62,7 +62,7 @@ def main():
 
         try:
             new_pipeline = pipe_store.create(m.get('components', []), **create_dict)
-            r.on_success('Successfully created pipeline {}'.format(str(new_pipeline['uuid'])))
+            r.on_success('Successfully created pipeline {} with update token {}'.format(new_pipeline['_uuid'], new_pipeline['token']))
         except Exception as exc:
             r.on_failure('Create failed', exc)
 

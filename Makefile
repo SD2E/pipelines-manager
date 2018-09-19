@@ -25,7 +25,7 @@ tests-pytest:
 	bash $(SCRIPT_DIR)/run_container_process.sh $(PYTHON) -m "pytest" $(PYTEST_DIR) $(PYTEST_OPTS)
 
 tests-integration: tests-local
-pipelines: tests-local-create-tasbe tests-local-create-platereader tests-local-create-rnaseq
+pipelines: create-tasbe create-platereader create-rnaseq
 
 tests-local: tests-local-create tests-local-delete
 
@@ -38,13 +38,13 @@ tests-local-create-tacobot:
 tests-local-delete-tacobot:
 	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/0-local-delete-tacobot.json
 
-tests-local-create-tasbe:
+create-tasbe:
 	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/1-local-create-tasbe.json
 
-tests-local-create-platereader:
+create-platereader:
 	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/2-local-create-platereader.json
 
-tests-local-create-rnaseq:
+create-rnaseq:
 	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/3-local-create-rnaseq.json
 
 
