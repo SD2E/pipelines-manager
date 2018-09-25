@@ -53,7 +53,8 @@
             "uri": "agave://data-sd2e-community/uploads",
             "options": {
                 "tenant": "sd2e",
-                "owner": "sd2eadm"
+                "owner": "sd2eadm",
+                "match": "*metadata-[A-Z0-9a-z-]+.json$"
             }
         },
         {
