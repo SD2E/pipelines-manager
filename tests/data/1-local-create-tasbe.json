@@ -3,7 +3,7 @@
     "description": "A paired reactor and application to take raw .fcs files and produce input JSON metadata for the fcs-etl-application. This application is a wrapped version of TASBE, which produces normalized CSV, PDF, PNG and IPYNG outputs.",
     "components": [
         {
-            "id": "Myqqeq4xB1Lqa",
+            "id": "EbGmvvzOamJYM",
             "repo": "index.docker.io/sd2e/fcs_etl_reactor:latest",
             "opts": {}
         },
