@@ -44,5 +44,6 @@
         "PDF",
         "IPYNB",
         "PNG"
-    ]
+    ],
+    "pipeline_class": "primary-etl"
 }

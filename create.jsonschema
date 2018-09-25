@@ -1,95 +1,168 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "PipelinesDefinition",
-  "description": "Create a Pipeline record",
-  "definitions": {
-    "app": {
-      "description": "an Agave application",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "the distinct 'app.id' for the Agave app"
-        },
-        "inputs": {
-          "type": "object",
-          "description": "predefined inputs for jobs spawned by the app"
-        },
-        "parameters": {
-          "type": "object",
-          "description": "predefined parameters for the jobs spawned by the app"
-        }
-      }
-    },
-    "actor": {
-      "description": "an Abaco Reactor",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "the distinct 'actor.id' for the Reactor"
-        },
-        "options": {
-          "type": "object",
-          "description": "predefined runtime options for the Reactor"
-        }
-      }
-    },
-    "processing_level": {
-      "description": "a data processing level",
-      "type": "string",
-      "enum": ["0", "1", "2", "3"]
-    },
-    "collections_level": {
-      "description": "a data processing level",
-      "type": "string",
-      "enum": ["challenge_problem", "experiment", "sample", "measurement", "file", "pipeline", "job"]
-    }
-  },
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string"
-    },
-    "description": {
-      "type": "string"
-    },
-    "components": {"description": "an unordered array of apps and actors in the pipeline (required)",
-                   "type": "array",
-                   "items": {"anyOf": [{"$ref": "#/definitions/app"}, {"$ref": "#/definitions/actor"}]}},
-    "collections_levels": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/collections_level"
-      },
-      "description": "level(s) of data input that the pipeline acts upon"
-    },
-    "processing_levels": {
-      "type": "array",
-      "description": "level(s) of data product produced by the pipeline",
-      "items": {
-        "$ref": "#/definitions/processing_level"
-      }
-    },
-    "accepts": {
-      "type": "array",
-      "description": "file types accepted by the pipeline",
-      "items": {
-        "type": "string"
-      }
-    },
-    "produces": {
-      "type": "array",
-      "description": "file types produced by the pipeline",
-      "items": {
-        "type": "string"
-      }
-    },
-    "__options": {
-      "description": "private field for passing runtime options to a pipeline",
-      "type": "object"
-    }
-  },
-  "required": ["name", "components"],
-  "additionalProperties": false
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "PipelinesDefinition",
+	"description": "Create a Pipeline record",
+	"definitions": {
+		"app": {
+			"description": "an Agave application",
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string",
+					"description": "the distinct 'app.id' for the Agave app"
+				},
+				"inputs": {
+					"type": "object",
+					"description": "predefined inputs for jobs spawned by the app"
+				},
+				"parameters": {
+					"type": "object",
+					"description": "predefined parameters for the jobs spawned by the app"
+				}
+			},
+			"required": ["id"]
+		},
+		"container": {
+			"description": "a deployed Linux container",
+			"type": "object",
+			"properties": {
+				"repo": {
+					"type": "string",
+					"description": "the container image repository and tag for the service"
+				},
+				"hash": {
+					"type": "string",
+					"description": "the container image hash"
+				},
+				"options": {
+					"type": "object",
+					"description": "deployment options"
+				}
+			},
+			"required": ["repo"]
+		},
+		"service": {
+			"description": "an external, networked resource",
+			"type": "object",
+			"properties": {
+				"identifier": {
+					"type": "string",
+					"description": "a unique identifier for a specific instance of a service (optional)",
+					"format": "uri"
+				},
+				"uri": {
+					"type": "string",
+					"description": "the canonical URI for the resource"
+					},
+				"options": {
+					"type": "object",
+					"description": "additional descriptive attributes (optional)"
+				}
+			},
+			"required": ["uri"]
+		},
+		"actor": {
+			"description": "an Abaco Reactor",
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string",
+					"description": "the distinct 'actor.id' for the Reactor"
+				},
+				"options": {
+					"type": "object",
+					"description": "predefined runtime options for the Reactor"
+				}
+			}
+			,
+			"required": ["id"]
+		},
+		"pipeline_class": {
+			"description": "the general class of action done by the pipeline",
+			"type": "string",
+			"enum": ["data-transfer", "metadata-management", "primary-etl", "secondary-etl"],
+			"default": "primary-etl"
+		},
+		"processing_level": {
+			"description": "a data processing level",
+			"type": "string",
+			"enum": ["0", "1", "2", "3"]
+		},
+		"collections_level": {
+			"description": "a data processing level",
+			"type": "string",
+			"enum": ["challenge_problem", "experiment", "sample", "measurement", "file", "pipeline", "job", "product"]
+		}
+	},
+	"type": "object",
+	"properties": {
+		"name": {
+			"type": "string"
+		},
+		"description": {
+			"type": "string"
+		},
+		"components": {
+			"description": "an unordered array of apps and actors in the pipeline (required)",
+			"type": "array",
+			"items": {
+				"anyOf": [{
+						"$ref": "#/definitions/app"
+					},
+					{
+						"$ref": "#/definitions/actor"
+					},
+					{
+						"$ref": "#/definitions/service"
+					},
+					{
+						"$ref": "#/definitions/container"
+					}
+				]
+			}
+		},
+		"collections_levels": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/collections_level"
+			},
+			"description": "level(s) of data input that the pipeline acts upon",
+			"default": []
+		},
+		"processing_levels": {
+			"type": "array",
+			"description": "level(s) of data product produced by the pipeline",
+			"items": {
+				"$ref": "#/definitions/processing_level"
+			},
+			"default": []
+		},
+		"pipeline_class": {
+			"items": {
+				"$ref": "#/definitions/pipeline_class"
+			}
+		},
+		"accepts": {
+			"type": "array",
+			"description": "file types accepted by the pipeline",
+			"items": {
+				"type": "string"
+			},
+			"default": ["*"]
+		},
+		"produces": {
+			"type": "array",
+			"description": "file types produced by the pipeline",
+			"items": {
+				"type": "string"
+			},
+			"default": ["*"]
+		},
+		"__options": {
+			"description": "private object for passing runtime options to a pipeline (optional)",
+			"type": "object"
+		}
+	},
+	"required": ["name", "components"],
+	"additionalProperties": false
 }

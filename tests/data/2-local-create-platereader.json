@@ -31,5 +31,6 @@
         "CSV",
         "PNG",
         "PDF"
-    ]
+    ],
+    "pipeline_class": "primary-etl"
 }
