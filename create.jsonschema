@@ -1,10 +1,14 @@
 {
 	"$schema": "http://json-schema.org/draft-04/schema#",
 	"title": "PipelinesDefinition",
-	"description": "Create a Pipeline record",
+	"description": "A Pipeline record. POST to PipelinesManager to create.",
 	"definitions": {
-		"app": {
-			"description": "an Agave application",
+		"container_repo": {
+			"type": "string",
+			"description": "a Linux container image repository and tag"
+		},
+		"agave_app": {
+			"description": "Agave application",
 			"type": "object",
 			"properties": {
 				"id": {
@@ -17,70 +21,79 @@
 				},
 				"parameters": {
 					"type": "object",
-					"description": "predefined parameters for the jobs spawned by the app"
+					"description": "predefined parameters for the jobs spawned by the app",
+					"properties": {
+						"CONTAINER_IMAGE": {
+							"$ref": "#/definitions/container_repo",
+							"description": "Linux container image repository and tag for the deployed app"
+						}
+					}
 				}
 			},
-			"required": ["id"]
+			"required": ["id", "inputs", "parameters"]
 		},
 		"container": {
-			"description": "a deployed Linux container",
+			"description": "Deployed Linux container",
 			"type": "object",
 			"properties": {
 				"repo": {
-					"type": "string",
-					"description": "the container image repository and tag for the service"
+					"$ref": "#/definitions/container_repo",
+					"description": "Linux container image repository and tag for the service"
 				},
 				"hash": {
 					"type": "string",
-					"description": "the container image hash"
+					"description": "Linux container image hash"
 				},
 				"options": {
 					"type": "object",
-					"description": "deployment options"
+					"description": "Deployment options"
 				}
 			},
 			"required": ["repo"]
 		},
 		"service": {
-			"description": "an external, networked resource",
+			"description": "External networked resource",
 			"type": "object",
 			"properties": {
 				"identifier": {
 					"type": "string",
-					"description": "a unique identifier for a specific instance of a service (optional)",
-					"format": "uri"
+					"description": "An identifier for a specific instance of a service"
 				},
 				"uri": {
 					"type": "string",
-					"description": "the canonical URI for the resource"
-					},
+					"description": "Canonical URI for the resource",
+					"format": "uri"
+				},
 				"options": {
 					"type": "object",
-					"description": "additional descriptive attributes (optional)"
+					"description": "Additional descriptive attributes"
 				}
 			},
 			"required": ["uri"]
 		},
-		"actor": {
-			"description": "an Abaco Reactor",
+		"abaco_actor": {
+			"description": "Abaco Reactor",
 			"type": "object",
 			"properties": {
 				"id": {
 					"type": "string",
-					"description": "the distinct 'actor.id' for the Reactor"
+					"description": "Distinct 'actor.id' for the Reactor"
+				},
+				"repo": {
+					"$ref": "#/definitions/container_repo",
+					"description": "Linux container image repository and tag for the deployed actor"
 				},
 				"options": {
 					"type": "object",
-					"description": "predefined runtime options for the Reactor"
+					"description": "Predefined runtime options for the Reactor"
 				}
-			}
-			,
-			"required": ["id"]
+			},
+			"required": ["id", "repo"]
 		},
-		"pipeline_class": {
+		"pipeline_type": {
 			"description": "the general class of action done by the pipeline",
 			"type": "string",
-			"enum": ["data-transfer", "metadata-management", "primary-etl", "secondary-etl"],
+			"enum": ["generic-process", "data-transfer", "metadata-management", "primary-etl", "secondary-etl"],
 			"default": "primary-etl"
 		},
 		"processing_level": {
@@ -107,10 +120,10 @@
 			"type": "array",
 			"items": {
 				"anyOf": [{
-						"$ref": "#/definitions/app"
+						"$ref": "#/definitions/agave_app"
 					},
 					{
-						"$ref": "#/definitions/actor"
+						"$ref": "#/definitions/abaco_actor"
 					},
 					{
 						"$ref": "#/definitions/service"
@@ -137,9 +150,9 @@
 			},
 			"default": []
 		},
-		"pipeline_class": {
+		"pipeline_type": {
 			"items": {
-				"$ref": "#/definitions/pipeline_class"
+				"$ref": "#/definitions/pipeline_type"
 			}
 		},
 		"accepts": {

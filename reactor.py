@@ -1,11 +1,13 @@
 import os
 import json
+import copy
+
 from attrdict import AttrDict
 from pprint import pprint
-from reactors.runtime import Reactor, agaveutils
 from jsonschema import ValidationError
+
+from reactors.runtime import Reactor, agaveutils
 from datacatalog.pipelines import PipelineStore, PipelineCreateFailure, PipelineUpdateFailure
-from datacatalog.identifiers import datacatalog_uuid
 
 def main():
 
@@ -21,7 +23,7 @@ def main():
 
     action = None
     try:
-        for a in ['create', 'update', 'delete']:
+        for a in ['create', 'update', 'delete', 'undelete']:
             try:
                 schema_file = '/schemas/' + a + '.jsonschema'
                 r.validate_message(
@@ -43,6 +45,7 @@ def main():
             options_settings = m.get('__options', {}).get('settings', {})
             if isinstance(options_settings, dict):
                 options_settings = AttrDict(options_settings)
+            m.pop('__options')
             r.settings = r.settings + options_settings
         except Exception as exc:
             r.on_failure('Failed to handle options', exc)
@@ -56,27 +59,38 @@ def main():
                                session=stores_session)
 
     if action == 'create':
-        create_dict = {}
-        for k in pipe_store.CREATE_OPTIONAL_KEYS:
-            if k in m:
-                create_dict[k] = m.get(k)
-
+        create_dict = copy.deepcopy(m)
         try:
-            new_pipeline = pipe_store.create(m.get('components', []), **create_dict)
+            new_pipeline = pipe_store.create(**create_dict)
             r.on_success('Created pipeline {} with update token {}'.format(
                 new_pipeline['_uuid'], new_pipeline['token']))
         except Exception as exc:
             r.on_failure('Create failed', exc)
 
-    # FIXME Implement 'update' here and in datacatalog.pipelines.store
+    if action == 'update':
+        update_dict = m.get('body', {})
+        try:
+            new_pipeline = pipe_store.update_pipeline(
+                pipeline_uuid=m['uuid'], update_token=m['token'], **update_dict)
+            r.on_success('Updated pipeline {}'.format(
+                new_pipeline['_uuid']))
+        except Exception as exc:
+            r.on_failure('Update failed', exc)
 
     if action == 'delete':
-        # FIXME Implement soft delete based on _visible key
         try:
-            pipe_store.delete(uuid=m.get('uuid'), token=m.get('token'), force=True)
-            r.on_success('Successfully deleted pipeline {}'.format(m.get('uuid')))
+            pipe_store.delete(m['uuid'], m['token'], m.get('force', False))
+            r.on_success('Deleted pipeline {}'.format(m.get('uuid')))
         except Exception as exc:
             r.on_failure('Delete failed', exc)
+
+    if action == 'undelete':
+        try:
+            pipe_store.undelete(m['uuid'], m['token'])
+            r.on_success('Un-deleted pipeline {}'.format(m.get('uuid')))
+        except Exception as exc:
+            r.on_failure('Undelete failed', exc)
+
 
 if __name__ == '__main__':
     main()

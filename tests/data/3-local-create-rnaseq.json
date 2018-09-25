@@ -4,6 +4,7 @@
     "components": [
         {
             "id": "wgqobY6wgkQJQ",
+            "repo": "index.docker.io/jurrutia/rnaseq_manifest_agent:0.5",
             "opts": {}
         },
         {
@@ -87,5 +88,5 @@
         "BAM",
         "HTML"
     ],
-    "pipeline_class": "primary-etl"
+    "pipeline_type": "primary-etl"
 }

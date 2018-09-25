@@ -4,10 +4,12 @@
     "components": [
         {
             "id": "eqMyqq4xB1Lqa",
+            "repo": "index.docker.io/tacc/tacbobot:latest",
             "opts": {}
         },
         {
             "id": "bbq-brisket-0.5.0",
+            "inputs": {},
             "parameters": {"smoke": true}
         }
     ],
@@ -21,5 +23,5 @@
     "produces": [
         "PNG"
     ],
-    "pipeline_class": "primary-etl"
+    "pipeline_type": "generic-process"
 }

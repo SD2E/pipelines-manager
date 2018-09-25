@@ -8,9 +8,10 @@
 			"description": "The job UUID",
 			"type": "string"
 		},
+		"body": {"type": "object"},
 		"action": {
 			"type": "string",
-			"enum": ["manage"]
+			"enum": ["update"]
 		},
 		"token": {
 			"description": "an authorization token issued when the pipeline was created",
@@ -23,6 +24,6 @@
 			"description": "an object used to pass runtime options to a reactor (private, optional)"
 		}
 	},
-	"required": ["uuid", "action", "token"],
+	"required": ["uuid", "action", "body", "token"],
 	"additionalProperties": false
 }

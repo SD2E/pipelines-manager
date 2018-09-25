@@ -32,5 +32,5 @@
         "PNG",
         "PDF"
     ],
-    "pipeline_class": "primary-etl"
+    "pipeline_type": "primary-etl"
 }

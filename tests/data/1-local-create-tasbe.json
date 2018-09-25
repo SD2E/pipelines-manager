@@ -4,6 +4,7 @@
     "components": [
         {
             "id": "Myqqeq4xB1Lqa",
+            "repo": "index.docker.io/sd2e/fcs_etl_reactor:latest",
             "opts": {}
         },
         {
@@ -27,7 +28,8 @@
                 "processControl": [
                     "agave://*/process_control_data.json"
                 ]
-            }
+            },
+            "parameters": {}
         }
     ],
     "collections_levels": [
@@ -42,8 +44,8 @@
         "CSV",
         "JUNIT",
         "PDF",
-        "IPYNB",
+        "IPYNB+JSON",
         "PNG"
     ],
-    "pipeline_class": "primary-etl"
+    "pipeline_type": "primary-etl"
 }

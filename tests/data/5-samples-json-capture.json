@@ -1,5 +1,5 @@
 {
-    "name": "Automated Metadata Ingest",
+    "name": "Metadata Ingest Manager",
     "description": "A set of Reactors that detect upload of a JSON document containing sample metadata, detects its format (based on JSON schemas for each lab's products), converts it to the current SD2 program schema, and uploads the resulting metadata file to Agave-managed storage. The file is then ingested into the MongoDB database that powers the Data Catalog.",
     "components": [
         {
@@ -83,5 +83,5 @@
         "SAMPLES",
         "CSV"
     ],
-    "pipeline_class": "metadata-management"
+    "pipeline_type": "metadata-management"
 }

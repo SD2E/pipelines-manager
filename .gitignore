@@ -1,3 +1,6 @@
+# Local instance for development
+datacatalog/
+
 # Abaco and Reactors-specific
 .agave
 .agpy

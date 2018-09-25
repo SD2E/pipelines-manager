@@ -1,7 +1,7 @@
 {
 	"$schema": "http://json-schema.org/draft-04/schema#",
-	"title": "PipelinesDefinitionDelete",
-	"description": "Delete a Pipeline record",
+	"title": "PipelinesDefinitionUndelete",
+	"description": "Un-delete a Pipeline record",
 	"type": "object",
 	"properties": {
 		"uuid": {
@@ -10,7 +10,7 @@
 		},
 		"action": {
 			"type": "string",
-			"enum": ["delete"]
+			"enum": ["undelete"]
 		},
 		"token": {
 			"description": "Authorization token issued when the pipeline was created",

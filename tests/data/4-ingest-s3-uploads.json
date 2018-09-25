@@ -1,7 +1,21 @@
 {
-    "name": "S3 Ingest",
+    "name": "Data Upload Manager",
     "description": "Implements high assurance data upload via S3 protocol, followed by capture of file fixity data.",
     "components": [
+        {
+            "uri": "https://s3-data-upload.sd2e.org:9001/",
+            "options": {
+                "repo": "minio/mc:RELEASE.2017-10-14T00-51-16Z",
+                "bucket": "uploads"
+            }
+        },
+        {
+            "uri": "amqp://wombat.rmq.cloudamqp.com/jrpzcdwt",
+            "identifier": "taccmon-staging",
+            "options": {
+                "vhost": "jrpzcdwt"
+            }
+        },
         {
             "repo": "sd2e/process_upload:latest",
             "options": {
@@ -15,16 +29,12 @@
             }
         },
         {
-            "uri": "amqp://wombat.rmq.cloudamqp.com/jrpzcdwt",
-            "identifier": "taccmon-staging",
-            "options": {"vhost": "jrpzcdwt"}
+            "repo": "sd2e/copy-s3-uploads:latest",
+            "id": "emEE3Jrpp8p45"
         },
         {
-            "uri": "https://s3-data-upload.sd2e.org:9001/",
-            "options": {
-                "repo": "minio/mc:RELEASE.2017-10-14T00-51-16Z",
-                "bucket": "uploads"
-            }
+            "repo": "sd2e/uploads-file-fixity-indexer:latest",
+            "id": "EqvOPJoZB5wEV"
         },
         {
             "uri": "agave://data-sd2e-community/uploads",
@@ -50,5 +60,5 @@
     "produces": [
         "*"
     ],
-    "pipeline_class": "data-transfer"
+    "pipeline_type": "data-transfer"
 }
