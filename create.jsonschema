@@ -104,7 +104,7 @@
 		"collections_level": {
 			"description": "a data processing level",
 			"type": "string",
-			"enum": ["challenge_problem", "experiment", "sample", "measurement", "file", "pipeline", "job", "product"]
+			"enum": ["reference", "user_file", "challenge_problem", "experiment", "sample", "measurement", "file", "pipeline", "job", "product"]
 		}
 	},
 	"type": "object",

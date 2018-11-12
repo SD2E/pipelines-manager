@@ -66,6 +66,9 @@ create-s3-ingest:
 create-samples-json-capture:
 	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/5-samples-json-capture.json
 
+create-manual-upload:
+	bash $(SCRIPT_DIR)/run_container_message.sh tests/data/6-local-create-manual-upload.json
+
 tests-local-run:
 	echo "not implemented"
 
