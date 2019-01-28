@@ -1,13 +1,9 @@
 FROM sd2e/reactors:python3-edge
 
 # Comment out if not actively developing python-datacatalog
+ARG DATACATALOG_BRANCH=0_2_0
 RUN pip uninstall --yes datacatalog || true
-# COPY datacatalog /datacatalog
+RUN pip3 install --upgrade --no-cache-dir \
+    git+https://github.com/SD2E/python-datacatalog.git@${DATACATALOG_BRANCH}
 
-# Install from Repo
-RUN pip3 install --upgrade git+https://github.com/SD2E/python-datacatalog.git@develop
-
-COPY create.jsonschema /schemas/create.jsonschema
-COPY update.jsonschema /schemas/update.jsonschema
-COPY delete.jsonschema /schemas/delete.jsonschema
-COPY undelete.jsonschema /schemas/undelete.jsonschema
+COPY schemas /schemas
