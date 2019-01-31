@@ -1,5 +1,6 @@
 {
-	"$schema": "http://json-schema.org/draft-04/schema#",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://schema.catalog.sd2e.org/schemas/pipeline_manager_delete.json",
 	"title": "PipelinesDefinitionDelete",
 	"description": "Delete a Pipeline record",
 	"type": "object",

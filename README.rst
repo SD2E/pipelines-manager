@@ -4,6 +4,12 @@ Pipelines Manager
 
 This Reactor enables creation and management of Data Catalog **Pipelines**.
 
+Messages
+--------
+
+All Pipeline management actions are accomplished by sending JSON-formatted
+messages. These are documented in detail below in JSONSchemas_.
+
 Create a New Pipeline
 ---------------------
 
@@ -38,3 +44,23 @@ Retire a Pipeline
 A pipeline cannot be deleted, but it can be retired from active service.
 
 *Coming soon...*
+
+.. _JSONSchemas:
+
+JSON Schemas
+------------
+
+.. literalinclude:: schemas/create.jsonschema
+   :language: json
+   :linenos:
+   :caption: pipeline_manager_create
+
+.. literalinclude:: schemas/update.jsonschema
+   :language: json
+   :linenos:
+   :caption: pipeline_manager_update
+
+.. literalinclude:: schemas/deletejsonschema
+   :language: json
+   :linenos:
+   :caption: pipeline_manager_delete
