@@ -4,7 +4,11 @@
     "components": [
         {
             "id": "e1LqaqMyqq4xB",
-            "opts": {"cheese": true, "salsa": true, "eggs": false}
+            "opts": {
+                "cheese": true,
+                "salsa": true,
+                "eggs": false
+            }
         },
         {
             "id": "bbq-brisket-0.5.0",
@@ -13,9 +17,6 @@
                 "quantity": 4
             }
         }
-    ],
-    "collections_levels": [
-        "measurement"
     ],
     "processing_levels": [
         "1"

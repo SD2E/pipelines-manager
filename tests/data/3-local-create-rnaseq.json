@@ -68,11 +68,6 @@
             }
         }
     ],
-    "collections_levels": [
-        "experiment",
-        "sample",
-        "measurement"
-    ],
     "processing_levels": [
         "1",
         "2"

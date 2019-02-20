@@ -8,7 +8,7 @@ mongodb:
   # username: catalog
   # password: catalog
   port: 27020
-  database: catalog
+  database: catalog_staging
   host: catalog.sd2e.org
   username: catalog
   password: ~

@@ -12,12 +12,9 @@
             "uri": "https://api.sd2e.org/files/v2"
         }
     ],
-    "collections_levels": [
-        "reference",
-        "user_file",
-        "file"
+    "processing_levels": [
+        "0"
     ],
-    "processing_levels": ["0"],
     "accepts": [
         "*"
     ],

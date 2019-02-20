@@ -101,11 +101,6 @@
 			"description": "a data processing level",
 			"type": "string",
 			"enum": ["0", "1", "2", "3"]
-		},
-		"collections_level": {
-			"description": "a data processing level",
-			"type": "string",
-			"enum": ["reference", "user_file", "challenge_problem", "experiment", "sample", "measurement", "file", "pipeline", "job", "product"]
 		}
 	},
 	"type": "object",
@@ -134,14 +129,6 @@
 					}
 				]
 			}
-		},
-		"collections_levels": {
-			"type": "array",
-			"items": {
-				"$ref": "#/definitions/collections_level"
-			},
-			"description": "level(s) of data input that the pipeline acts upon",
-			"default": []
 		},
 		"processing_levels": {
 			"type": "array",

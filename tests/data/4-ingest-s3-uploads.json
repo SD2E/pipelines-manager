@@ -41,7 +41,7 @@
             "options": {
                 "tenant": "sd2e",
                 "owner": "sd2eadm"
-                }
+            }
         },
         {
             "uri": "mongodb://catalog@catalog.sd2e.org:27020/admin?readPreference=primary",
@@ -52,8 +52,9 @@
             }
         }
     ],
-    "processing_levels": ["0"],
-    "collections_levels": ["file"],
+    "processing_levels": [
+        "0"
+    ],
     "accepts": [
         "*"
     ],

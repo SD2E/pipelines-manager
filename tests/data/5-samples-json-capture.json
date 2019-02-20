@@ -38,13 +38,15 @@
                 "release": "1.4.0"
             }
         },
-        {"repo": "sd2etest/sd2-dictionary-maintainer:1.1.1",
+        {
+            "repo": "sd2etest/sd2-dictionary-maintainer:1.1.1",
             "options": {
                 "host": "chombo-staging.sd2e.org"
             }
         },
         {
-            "uri": "https://docs.google.com/spreadsheets/d/1oLJTTydL_5YPyk-wY-dspjIw_bPZ3oCiWiK0xtG8t3g"},
+            "uri": "https://docs.google.com/spreadsheets/d/1oLJTTydL_5YPyk-wY-dspjIw_bPZ3oCiWiK0xtG8t3g"
+        },
         {
             "id": "D0bvrrM4qLwgr",
             "repo": "index.docker.io/sd2e/ingest_samples_json:latest"
@@ -65,13 +67,6 @@
                 "replica": null
             }
         }
-    ],
-    "collections_levels": [
-        "challenge_problem",
-        "experiment",
-        "sample",
-        "measurement",
-        "file"
     ],
     "processing_levels": [
         "0"
