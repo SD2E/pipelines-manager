@@ -4,9 +4,6 @@ logs:
   level: DEBUG
   token: ~
 mongodb:
-  # host: 127.0.0.1
-  # username: catalog
-  # password: catalog
   port: 27020
   database: catalog_staging
   host: catalog.sd2e.org
