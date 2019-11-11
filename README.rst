@@ -15,7 +15,7 @@ Create a New Pipeline
     kOYmxWRq5X4K7 INFO Creating pipeline...
     kOYmxWRq5X4K7 INFO Wrote pipeline 10675c08-f803-5ccb-b508-e56f49888dca; Update token: 365bc32258cf546a
 
-Take note of the pipeline's UUID (i.e. ``1064aaf1-459c-5e42-820d-b822aa4b3990``)
+Take note of the pipeline's UUID (i.e. ``10675c08-f803-5ccb-b508-e56f49888dca``)
 as it is needed to configure code and scripts that launch jobs. Note also the
 pipeline's update token (``365bc32258cf546a``) as it is required to manage the
 pipeline at a future time. An admin token may be provided in place of the
