@@ -1,0 +1,23 @@
+{
+    "name": "Tacobot 8001",
+    "description": "Will fail to update since one cannot change components in a pipeline after it is registered.",
+    "components": [
+        {
+            "id": "eqMyqq4xB1Lqa",
+            "image": "index.docker.io/tacc/tacbobot:previous",
+            "options": {}
+        }
+    ],
+    "accepts": [
+        "CSV",
+        "TSV"
+    ],
+    "produces": [
+        "PNG",
+        "PDF"
+    ],
+    "processing_levels": [
+        "1"
+    ],
+    "id": "tacobot:8000"
+}

@@ -43,8 +43,9 @@ def main():
                 action = a
                 break
             except Exception as exc:
-                r.logger.debug('Validation to "{0}" failed: {1}\n'.format(
-                    a, exc))
+                if action not in ('enable', 'disable'):
+                    r.logger.debug('Validation to "{0}" failed: {1}\n'.format(
+                        a, exc))
         if action is None:
             raise ValidationError('Message did not match any known schema')
     except Exception as vexc:
@@ -64,31 +65,35 @@ def main():
         create_dict = copy.deepcopy(m)
         try:
             if uuid and token:
-                pipeline = pipe_store.add_update_document(create_dict)
-            else:
+                r.logger.info('Replacing {}'.format(uuid))
                 pipeline = pipe_store.add_update_document(
                     create_dict,
                     uuid=uuid,
                     token=token,
                     strategy=strategies.REPLACE)
+            else:
+                r.logger.info('Creating pipeline...')
+                pipeline = pipe_store.add_update_document(create_dict)
             r.on_success('Wrote pipeline {}; Update token: {}'.format(
-                pipeline['uuid'], pipeline['token']))
+                pipeline['uuid'], pipeline['_update_token']))
         except Exception as exc:
             r.on_failure('Write failed', exc)
 
     if action == 'disable':
         try:
-            pipe_store.delete_document(uuid, token, force=False)
-            r.on_success('Disabled pipeline {}'.format(m.get('uuid')))
+            r.logger.info('Disabling pipeline {}'.format(uuid))
+            resp = pipe_store.delete_document(uuid, token, force=False)
+            r.on_success('Success')
         except Exception as exc:
-            r.on_failure('Disable request failed', exc)
+            r.on_failure('Disable failed', exc)
 
     if action == 'enable':
         try:
-            pipe_store.undelete(m['uuid'], m['token'])
-            r.on_success('Un-deleted pipeline {}'.format(m.get('uuid')))
+            r.logger.info('Enabling pipeline {}'.format(uuid))
+            resp = pipe_store.undelete(uuid, token)
+            r.on_success('Success')
         except Exception as exc:
-            r.on_failure('Undelete failed', exc)
+            r.on_failure('Enable failed', exc)
 
 
 if __name__ == '__main__':

@@ -1,11 +1,11 @@
 {
     "name": "Tacobot 8000",
-    "description": "Precursor to Tacotbot 9000",
+    "description": "Precursor to Tacotbot 9000. Demonstrates the 4 component types.",
     "components": [
         {
             "id": "eqMyqq4xB1Lqa",
-            "repo": "index.docker.io/tacc/tacbobot:previous",
-            "opts": {}
+            "image": "index.docker.io/tacc/tacbobot:previous",
+            "options": {}
         },
         {
             "id": "bbq-brisket-0.5.0",
@@ -14,12 +14,26 @@
                 "smoke": true,
                 "hp_sauce": true
             }
+        },
+        {
+            "uri": "https://api.marvel.com/v1/public/comics",
+            "identifier": "marvel-comics-api-v1"
+        },
+        {
+            "image": "index.docker.io/tacc/tacbobot-web:master",
+            "hostname": "tacobot.sd2e.org"
         }
     ],
     "accepts": [
-        "CSV"
+        "CSV",
+        "TSV"
     ],
     "produces": [
-        "PNG"
-    ]
+        "PNG",
+        "PDF"
+    ],
+    "processing_levels": [
+        "1"
+    ],
+    "id": "tacobot:8000"
 }
