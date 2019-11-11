@@ -1,28 +1,25 @@
 {
-    "name": "Tacobot 9000",
-    "description": "Creates delicious breakfast tacos out of silicon and ozone",
+    "name": "Tacobot 8000",
+    "description": "Precursor to Tacotbot 9000",
     "components": [
         {
             "id": "eqMyqq4xB1Lqa",
-            "repo": "index.docker.io/tacc/tacbobot:latest",
+            "repo": "index.docker.io/tacc/tacbobot:previous",
             "opts": {}
         },
         {
             "id": "bbq-brisket-0.5.0",
             "inputs": {},
             "parameters": {
-                "smoke": true
+                "smoke": true,
+                "hp_sauce": true
             }
         }
-    ],
-    "processing_levels": [
-        "1"
     ],
     "accepts": [
         "CSV"
     ],
     "produces": [
         "PNG"
-    ],
-    "pipeline_type": "generic-process"
+    ]
 }
