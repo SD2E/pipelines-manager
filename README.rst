@@ -34,7 +34,7 @@ document contents along with its UUID and the update token like so:
 
 .. code-block:: console
 
-    $  abaco run -F tests/data/0-local-update-tacobot-name.json -q 'uuid=10675c08-f803-5ccb-b508-e56f49888dca&token=365bc32258cf546a' -x kOYmxWRq5X4K7
+    $  abaco run -F 1-tacobot.json -q 'uuid=10675c08-f803-5ccb-b508-e56f49888dca&token=365bc32258cf546a' -x kOYmxWRq5X4K7
     kOYmxWRq5X4K7 DEBUG Action selected: create
     kOYmxWRq5X4K7 INFO Replacing 10675c08-f803-5ccb-b508-e56f49888dca
     kOYmxWRq5X4K7 INFO Wrote pipeline 10675c08-f803-5ccb-b508-e56f49888dca; Update token: 0898ac57b681c3df
